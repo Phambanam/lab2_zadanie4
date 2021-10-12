@@ -1,12 +1,15 @@
 package ru.spbstu.icc.kspt.lab2.continuewatch
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 const val SECONDS_ELAPSED = "seconds elapsed"
 class MainActivity : AppCompatActivity() {
     var secondsElapsed: Int = 0
-    var count: Boolean = true;
+    var count: Boolean = true
+    private lateinit var sharedPreferences: SharedPreferences
     lateinit var textSecondsElapsed: TextView
     var backgroundThread = Thread {
 
@@ -25,21 +28,28 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         textSecondsElapsed = findViewById(R.id.textSecondsElapsed)
+        sharedPreferences = getSharedPreferences(SECONDS_ELAPSED, Context.MODE_PRIVATE)
         backgroundThread.start()
     }
 
     override fun onResume() {
-        count = true
         super.onResume()
+        count = true
+        secondsElapsed = sharedPreferences.getInt(SECONDS_ELAPSED, 0)
+
     }
 
     override fun onStop() {
-        count = false
         super.onStop()
+        count = false
+        sharedPreferences.edit().run {
+            putInt(SECONDS_ELAPSED, secondsElapsed)
+            apply()
+        }
 
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
+   /* override fun onSaveInstanceState(outState: Bundle) {
             outState.putInt(SECONDS_ELAPSED, secondsElapsed)
         super.onSaveInstanceState(outState)
     }
@@ -47,5 +57,5 @@ class MainActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         secondsElapsed = savedInstanceState.getInt(SECONDS_ELAPSED)
         super.onRestoreInstanceState(savedInstanceState)
-    }
+    }*/
 }
