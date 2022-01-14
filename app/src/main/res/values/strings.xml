@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Continue Watch</string>
+    <string name="button_activity">Button Activity</string>
+    <string name="textview">TextView</string>
 </resources>
